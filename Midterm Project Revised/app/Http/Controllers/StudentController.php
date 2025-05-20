@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -13,12 +14,11 @@ class StudentController extends Controller
         $search = $request->query('search');
         $userRole = session('user_role');
         $userId = session('user_id');
-    
+
         $students = DB::table('students')
             ->join('usertype', 'students.usertype_id', '=', 'usertype.id')
             ->select('students.*', 'usertype.email')
             ->when($userRole === 'teacher', function ($query) use ($userId) {
-                // Filter students enrolled in the teacher's courses
                 return $query->whereIn('students.id', function ($subQuery) use ($userId) {
                     $subQuery->select('enrollments.student_id')
                         ->from('enrollments')
@@ -29,15 +29,17 @@ class StudentController extends Controller
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('students.fname', 'like', "%{$search}%")
-                      ->orWhere('students.mname', 'like', "%{$search}%")
-                      ->orWhere('students.lname', 'like', "%{$search}%")
-                      ->orWhere('usertype.email', 'like', "%{$search}%");
+                        ->orWhere('students.mname', 'like', "%{$search}%")
+                        ->orWhere('students.lname', 'like', "%{$search}%")
+                        ->orWhere('usertype.email', 'like', "%{$search}%");
                 });
             })
+            ->orderBy('students.created_at', 'desc')
             ->paginate(5);
-    
+
         return view('students.index', compact('students'));
     }
+
 
     public function create()
     {
@@ -46,6 +48,7 @@ class StudentController extends Controller
 
     public function insert(Request $request)
     {
+
         $request->validate([
             'fname' => 'required|string|max:255',
             'mname' => 'required|string|max:255',
@@ -105,6 +108,12 @@ class StudentController extends Controller
 
     public function edit($id)
     {
+        // $user = Auth::user();
+
+        // if ($user->role === 'student' && $user->student->id != $id) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
         $student = DB::table('students')
             ->join('usertype', 'students.usertype_id', '=', 'usertype.id')
             ->select('students.*', 'usertype.email')
@@ -127,17 +136,16 @@ class StudentController extends Controller
             'guardian_name' => 'required|string|max:255',
             'guardian_phone' => 'required|string|max:255',
             'status' => 'required|in:Active,Inactive,Graduated,Dropped',
-            'email' => "required|email|unique:usertype,email"
         ]);
 
         DB::transaction(function () use ($request, $id) {
             $student = DB::table('students')->where('id', $id)->first();
 
             // Update user email
-            DB::table('usertype')->where('id', $student->usertype_id)->update([
-                'email' => $request->email,
-                'updated_at' => now(),
-            ]);
+            // DB::table('usertype')->where('id', $student->usertype_id)->update([
+            //     'email' => $request->email,
+            //     'updated_at' => now(),
+            // ]);
 
             // Update student info
             DB::table('students')->where('id', $id)->update([

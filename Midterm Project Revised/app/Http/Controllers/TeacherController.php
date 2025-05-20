@@ -17,15 +17,17 @@ class TeacherController extends Controller
             ->select('teachers.*', 'usertype.email')
             ->when($search, function ($query, $search) {
                 return $query->where('teachers.fname', 'like', "%{$search}%")
-                             ->orWhere('teachers.lname', 'like', "%{$search}%")
-                             ->orWhere('teachers.phone', 'like', "%{$search}%")
-                             ->orWhere('teachers.department', 'like', "%{$search}%")
-                             ->orWhere('usertype.email', 'like', "%{$search}%");
+                    ->orWhere('teachers.lname', 'like', "%{$search}%")
+                    ->orWhere('teachers.phone', 'like', "%{$search}%")
+                    ->orWhere('teachers.department', 'like', "%{$search}%")
+                    ->orWhere('usertype.email', 'like', "%{$search}%");
             })
+            ->orderBy('teachers.created_at', 'desc')
             ->paginate(5);
 
         return view('teachers.index', compact('teachers'));
     }
+
 
     public function create()
     {
@@ -97,17 +99,17 @@ class TeacherController extends Controller
             'lname' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'department' => 'required|string|max:255',
-            'email' => "required|email|unique:usertype,email,{$id},id"
+            // 'email' => "required|email|unique:usertype,email,{$id},id"
         ]);
 
         DB::transaction(function () use ($request, $id) {
             $teacher = DB::table('teachers')->where('id', $id)->first();
 
-            // Update usertype email
-            DB::table('usertype')->where('id', $teacher->usertype_id)->update([
-                'email' => $request->email,
-                'updated_at' => now(),
-            ]);
+            // // Update usertype email
+            // DB::table('usertype')->where('id', $teacher->usertype_id)->update([
+            //     'email' => $request->email,
+            //     'updated_at' => now(),
+            // ]);
 
             // Update teacher profile
             DB::table('teachers')->where('id', $id)->update([

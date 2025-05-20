@@ -41,12 +41,12 @@ class AuthController extends Controller
         Session::put('user_email', $user->email);
         Session::put('user_role', $user->role);
         
-        // 🔁 Redirect based on role
+        // Redirect based on role
         switch ($user->role) {
             case 'admin':
                 return to_route('admin.dashboard');
             case 'teacher':
-                return to_route('students.index', ['id' => $user->id]); // or your intended teacher landing route
+                return to_route('students.index'); 
             case 'student':
                 $student = DB::table('students')->where('usertype_id', $user->id)->first();
 
@@ -54,7 +54,7 @@ class AuthController extends Controller
                     return to_route('login')->with('error', 'Student record not found');
                 }
 
-                Session::put('student_id', $student->id); // Optional, if you need it later
+                Session::put('student_id', $student->id); // 
 
                 return to_route('students.details', ['id' => $student->id]);
             default:

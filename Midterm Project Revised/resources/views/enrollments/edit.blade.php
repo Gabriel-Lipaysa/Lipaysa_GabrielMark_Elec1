@@ -2,7 +2,7 @@
 
 @section('title', 'Add Enrollment')
 @section('content')
-<div class="container">
+<div class="container p-5">
     <h2>Add Enrollment</h2>
     <form action="{{ route('enrollments.update', $enrollment->id) }}" method="POST">
         @csrf
@@ -23,10 +23,6 @@
                     <option value="{{ $course->id }}">{{ $course->course_name }}</option>
                 @endforeach
             </select>   
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Enrollment Date</label>
-            <input type="date" name="enrollment_date" class="form-control" value="{{$enrollment->enrollment_date}}">
         </div>
         <div class="mb-3">
             <label class="form-label">Status</label>

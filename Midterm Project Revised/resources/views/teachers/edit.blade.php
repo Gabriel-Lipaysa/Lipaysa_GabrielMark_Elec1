@@ -39,12 +39,13 @@
                 <label class="form-label">Department</label>
                 <input type="text" name="department" class="form-control" value="{{old('department', $teacher->department)}}" required>
             </div>
-            <div class="form-group mb-3">
+            {{-- <div class="form-group mb-3">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-control" value="{{old('email', $teacher->email)}}" required>
                 @error('email') <small class="text-danger">{{$message}}</small>@enderror
-            </div>
+            </div> --}}
             <button type="submit" class="btn btn-primary">Update Teacher</button>
+            <a href="{{url()->previous()}}" class="btn btn-secondary">Back</a>
         </form>
     </div>
 @endsection

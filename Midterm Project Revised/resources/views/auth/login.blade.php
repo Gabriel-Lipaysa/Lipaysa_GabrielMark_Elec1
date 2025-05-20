@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <title>Login</title>
 </head>
+
 <body class="container-fluid">
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="col-md-4">
@@ -44,17 +46,25 @@
                             <button type="submit" class="btn btn-primary rounded-pill w-50">Login</button>
                         </div>
                     </form>
-                    
+
                     {{-- Prevent logged-in users from accessing login page --}}
-                    @if(session('user'))
+                    @if(session('user_role'))
                         <script>
-                            window.location.href = "{{ route(session('user.role') . '.dashboard') }}";
+                            @if(session('user_role') === 'admin')
+                                window.location.href = "{{ route('admin.dashboard') }}";
+                            @elseif(session('user_role') === 'teacher')
+                                window.location.href = "{{ route('students.index') }}";
+                            @elseif(session('user_role') === 'student')
+                                window.location.href = "{{ route('students.details', ['id' => session('student_id')]) }}";
+                            @endif
                         </script>
                     @endif
+
 
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

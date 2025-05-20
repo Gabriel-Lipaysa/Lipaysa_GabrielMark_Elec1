@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('course_name');
             $table->string('course_code');
             $table->double('price');
-            $table->integer('units');
+            $table->double('units');
             $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
             $table->string('year');
             $table->string('semester');

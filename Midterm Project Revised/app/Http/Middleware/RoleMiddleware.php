@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Session;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ... $roles)
     {
-        if (!Session::has('user_role') || Session::get('user_role') !== $role) {
-            print(Session::get('user_role'));
-            
+         $userRole = Session::get('user_role');
+
+        if (!$userRole || !in_array($userRole, $roles)) {
             return to_route('login')->with('error', 'Unauthorized access');
         }
 

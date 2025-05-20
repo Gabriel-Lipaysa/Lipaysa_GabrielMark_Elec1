@@ -26,13 +26,13 @@ Route::middleware(['role:admin'])->group(function () {
         Route::post('insert', [TeacherController::class, 'insert'])->name('insert');
         Route::get('details/{id}', [TeacherController::class, 'show'])->name('details');
         Route::get('edit/{id}', [TeacherController::class, 'edit'])->name('edit');
-        Route::post('update/{id}', [TeacherController::class, 'update'])->name('update');
+        Route::put('update/{id}', [TeacherController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [TeacherController::class, 'destroy'])->name('destroy');
     });
 
     // Students
     Route::prefix('students')->name('students.')->group(function () {
-        Route::get('/', [StudentController::class, 'index'])->name('index');
+        //Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('create', [StudentController::class, 'create'])->name('create');
         Route::post('insert', [StudentController::class, 'insert'])->name('insert');
         Route::delete('delete/{id}', [StudentController::class, 'destroy'])->name('destroy');
@@ -61,7 +61,7 @@ Route::middleware(['role:admin'])->group(function () {
 });
 
 // Shared routes for teacher and admin
-Route::middleware(['role:admin,teacher'])->group(function () {
+Route::middleware(['role:admin,teacher,student'])->group(function () {
     Route::prefix('students')->name('students.')->group(function () {
         Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('details/{id}', [StudentController::class, 'show'])->name('details');
@@ -79,12 +79,12 @@ Route::middleware(['role:admin,teacher'])->group(function () {
 });
 
 // Student-only routes
-Route::middleware(['role:student'])->group(function () {
-    Route::prefix('students')->name('students.')->group(function () {
-        Route::get('details/{id}', [StudentController::class, 'show'])->name('details');
-        Route::get('edit/{id}', [StudentController::class, 'edit'])->name('edit');
-        Route::post('update/{id}', [StudentController::class, 'update'])->name('update');
-    });
+// Route::middleware(['role:student'])->group(function () {
+//     Route::prefix('students')->name('students.')->group(function () {
+//         Route::get('details/{id}', [StudentController::class, 'show'])->name('details');
+//         Route::get('edit/{id}', [StudentController::class, 'edit'])->name('edit');
+//         Route::post('update/{id}', [StudentController::class, 'update'])->name('update');
+//     });
 
-    Route::get('students/{id}/grades', [GradeController::class, 'index'])->name('students.grades.index');
-});
+//     Route::get('students/{id}/grades', [GradeController::class, 'index'])->name('students.grades.index');
+// });

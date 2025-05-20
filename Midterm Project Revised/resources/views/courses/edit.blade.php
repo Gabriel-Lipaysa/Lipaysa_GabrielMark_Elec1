@@ -5,7 +5,19 @@
 @section('content')
     <div class="container p-5">
         <h2>Edit Course</h2>
-        <form action="{{route('courses.update', $course->id)}}" method="POST" >
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-success">{{session('success')}}</div>
+        @endif
+        <form action="{{route('courses.update', $course->id)}}" method="POST">
             @csrf
             <div class="form-group mb-3">
                 <label class="form-label">Course Name</label>
@@ -13,15 +25,15 @@
             </div>
             <div class="form-group mb-3">
                 <label for="form-label">Course Code</label>
-                <input type="text" name="course_code"  class="form-control" value="{{$course->course_code}}">
+                <input type="text" name="course_code" class="form-control" value="{{$course->course_code}}">
             </div>
             <div class="form-group mb-3">
                 <label for="form-label">Price</label>
-                <input type="text" name="price"  class="form-control" value="{{$course->price}}">
+                <input type="text" name="price" class="form-control" value="{{$course->price}}">
             </div>
             <div class="form-group mb-3">
                 <label for="form-label">Units</label>
-                <input type="number" name="units"  class="form-control" value="{{$course->units}}">
+                <input type="number" name="units" class="form-control" value="{{$course->units}}">
             </div>
             <div class="form-group mb-3">
                 <label for="form-label">Instructor</label>
@@ -34,10 +46,10 @@
                     @endforeach
                 </select>
             </div>
-            
+
             <div class="form-group mb-3">
                 <label for="form-label">Year</label>
-                <input type="text" name="year"  class="form-control" value="{{$course->year}}">
+                <input type="text" name="year" class="form-control" value="{{$course->year}}">
             </div>
             <div class="form-group mb-3">
                 <label for="form-label">Semester</label>

@@ -29,6 +29,7 @@
                         <th>ID</th>
                         <th>Full Name</th>
                         <th>Email</th>
+                        <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,6 +39,7 @@
                         <td>{{$student->id}}</td>
                         <td>{{$student->lname}}, {{$student->fname}} {{$student->mname}}</td>
                         <td>{{$student->email}}</td>
+                        <td>{{$student->created_at}}</td>
                        
                         <td>
                             <a href="{{route('students.details',$student->id)}}" class="btn btn-info btn-sm">View</a>
